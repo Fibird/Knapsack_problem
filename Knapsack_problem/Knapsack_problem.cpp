@@ -41,14 +41,7 @@ int main()
 
 	Knapsack(t, values, num + 1, capacity + 1);
 
-	cout << "The solution is: " << endl;
-	for (int i = 0; i < num + 1; ++i)
-	{
-		for (int j = 0; j < capacity + 1; ++j)
-			cout << values[i][j] << " ";
-		cout << endl;
-	}
-		
+	cout << "The solution is: " << endl;		
 	BackTrack(t, values, num, capacity);
 	cout << endl;
 
@@ -82,13 +75,9 @@ void BackTrack(Thing *t, int ** v, int n, int w)
 		if (v[i][j] != v[i - 1][j])
 		{
 			cout << i << " ";
-			i--;
-			j -= t[i].w;
+			j -= t[i - 1].w;
 		}
-		else
-		{
-			i--;
-		}
+		i--;
 	}
 }
 
