@@ -14,7 +14,6 @@ struct Thing
 };
 
 stack<int> Knapsack(Thing *things, int **values, int n, int w);
-void BackTrack(Thing *t, int **v, int n, int w);
 
 int main()
 {
