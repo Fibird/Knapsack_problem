@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ struct Thing
 	int w;	// Weight
 };
 
-void Knapsack(Thing *things, int **values, int n, int w);
+stack<int> Knapsack(Thing *things, int **values, int n, int w);
 void BackTrack(Thing *t, int **v, int n, int w);
 
 int main()
@@ -20,6 +21,7 @@ int main()
 	int num, capacity;
 	Thing *t;
 	int **values;
+	stack<int> result;
 
 	cout << "Please Enter the number of thing: ";
 	cin >> num;
@@ -39,21 +41,32 @@ int main()
 	for (int i = 0; i <= num; ++i)
 		values[i] = new int[capacity + 1];
 
-	Knapsack(t, values, num + 1, capacity + 1);
+	result = Knapsack(t, values, num + 1, capacity + 1);
 
-	cout << "The solution is: " << endl;		
-	BackTrack(t, values, num, capacity);
+	cout << "The solution is: " << endl;
+	while (!result.empty())
+	{
+		cout << result.top() << " ";
+		result.pop();
+	}
+		
 	cout << endl;
 
     return 0;
 }
 
-void Knapsack(Thing * things, int ** values, int n, int w)
+stack<int> Knapsack(Thing * things, int ** values, int n, int w)
 {
+	int r = n - 1, c = w - 1;
+	stack<int> result;
+	
+	// Initialize the array values
 	for (int i = 0; i < w; ++i)
 		values[0][i] = 0;
 	for (int i = 0; i < n; i++)
 		values[i][0] = 0;
+
+	// Fill in the array values
 	for (int j = 1; j < w; ++j)
 	{
 		for (int i = 1; i < n; ++i)
@@ -64,20 +77,16 @@ void Knapsack(Thing * things, int ** values, int n, int w)
 				values[i][j] = (values[i - 1][j] > (things[i - 1].v + values[i - 1][j - things[i - 1].w]) ? values[i - 1][j] : (things[i - 1].v + values[i - 1][j - things[i - 1].w]));
 		}
 	}
-}
 
-void BackTrack(Thing *t, int ** v, int n, int w)
-{
-	int i = n, j = w;
-
-	while (i != 0 || j != 0)
+	// Backtrack the values
+	while (r != 0 || c != 0)
 	{
-		if (v[i][j] != v[i - 1][j])
+		if (values[r][c] != values[r - 1][c])
 		{
-			cout << i << " ";
-			j -= t[i - 1].w;
+			result.push(r);
+			c -= things[r - 1].w;
 		}
-		i--;
+		r--;
 	}
+	return result;
 }
-
