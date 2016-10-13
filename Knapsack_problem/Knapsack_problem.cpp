@@ -35,14 +35,21 @@ int main()
 	cin >> capacity;
 
 	// Allocate memory for values
-	values = new int*[num];
-	for (int i = 0; i < num; ++i)
-		values[i] = new int[capacity];
+	values = new int*[num + 1];
+	for (int i = 0; i <= num; ++i)
+		values[i] = new int[capacity + 1];
 
-	Knapsack(t, values, num, capacity);
+	Knapsack(t, values, num + 1, capacity + 1);
 
 	cout << "The solution is: " << endl;
-	BackTrack(t, values, num - 1, capacity - 1);
+	for (int i = 0; i < num + 1; ++i)
+	{
+		for (int j = 0; j < capacity + 1; ++j)
+			cout << values[i][j] << " ";
+		cout << endl;
+	}
+		
+	BackTrack(t, values, num, capacity);
 	cout << endl;
 
     return 0;
@@ -51,34 +58,37 @@ int main()
 void Knapsack(Thing * things, int ** values, int n, int w)
 {
 	for (int i = 0; i < w; ++i)
-	{
 		values[0][i] = 0;
+	for (int i = 0; i < n; i++)
 		values[i][0] = 0;
-	}
 	for (int j = 1; j < w; ++j)
 	{
-		for (int i = 1; i < w; ++i)
+		for (int i = 1; i < n; ++i)
 		{
-			if ((j - things[i].w) < 0)
+			if ((j - things[i - 1].w) < 0)
 				values[i][j] = values[i - 1][j];
 			else
-				values[i][j] = (values[i - 1][j] > (things[i].v + values[i - 1][j] - things[i].w) ? values[i - 1][j] : (things[i].v + values[i - 1][j] - things[i].w));
+				values[i][j] = (values[i - 1][j] > (things[i - 1].v + values[i - 1][j - things[i - 1].w]) ? values[i - 1][j] : (things[i - 1].v + values[i - 1][j - things[i - 1].w]));
 		}
 	}
 }
 
 void BackTrack(Thing *t, int ** v, int n, int w)
 {
-	if (v[n][w] == v[n - 1][w])
-	{
-		cout << n << " ";
-		BackTrack(t, v, n - 1, w - t[n].w);
-	}
-	else
-	{
-		BackTrack(t, v, n - 1, w);
-	}
-		
+	int i = n, j = w;
 
+	while (i != 0 || j != 0)
+	{
+		if (v[i][j] != v[i - 1][j])
+		{
+			cout << i << " ";
+			i--;
+			j -= t[i].w;
+		}
+		else
+		{
+			i--;
+		}
+	}
 }
 
