@@ -73,12 +73,15 @@ stack<int> Knapsack(Thing * things, int ** values, int n, int w)
 			if ((j - things[i - 1].w) < 0)
 				values[i][j] = values[i - 1][j];
 			else
-				values[i][j] = (values[i - 1][j] > (things[i - 1].v + values[i - 1][j - things[i - 1].w]) ? values[i - 1][j] : (things[i - 1].v + values[i - 1][j - things[i - 1].w]));
+				values[i][j] = (values[i - 1][j] > 
+							   (things[i - 1].v + values[i - 1][j - things[i - 1].w]) ? 
+								values[i - 1][j] : 
+							   (things[i - 1].v + values[i - 1][j - things[i - 1].w]));
 		}
 	}
-
+	
 	// Backtrack the values
-	while (r != 0 || c != 0)
+	while (r != 0 && c != 0)
 	{
 		if (values[r][c] != values[r - 1][c])
 		{
